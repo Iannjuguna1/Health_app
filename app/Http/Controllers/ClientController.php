@@ -63,4 +63,17 @@ class ClientController extends Controller
             return response()->json(['error' => 'Failed to delete client', 'details' => $e->getMessage()], 500);
         }
     }
+
+    // View a client's profile
+public function show($id)
+{
+    try {
+        $client = Client::with(['appointments', 'programs', 'users', 'notifications'])->findOrFail($id);
+
+        return response()->json(['client' => $client]);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Failed to retrieve client profile', 'details' => $e->getMessage()], 500);
+    }
+}
+
 }

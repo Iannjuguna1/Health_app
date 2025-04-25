@@ -65,3 +65,7 @@ use App\Http\Controllers\NotificationController;
 Route::post('/notifications', [NotificationController::class, 'store']);         // Create and send a notification
 Route::get('/notifications', [NotificationController::class, 'index']);          // Retrieve notifications for a client or user
 Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead']); // Mark a notification as read
+
+
+//client-profile information
+Route::get('/clients/{id}', [ClientController::class, 'show']); // View a client's profile
