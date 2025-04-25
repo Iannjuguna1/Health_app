@@ -7,5 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Enrollment extends Model
 {
-    use HasFactory;
+    protected $table = 'enrollments';
+
+    public function client()
+    {
+        return $this->belongsTo(Client::class);
+    }
+
+    public function program()
+    {
+        return $this->belongsTo(Program::class);
+    }
 }
+

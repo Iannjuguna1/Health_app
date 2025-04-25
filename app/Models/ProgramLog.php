@@ -7,5 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProgramLog extends Model
 {
-    use HasFactory;
+    public function client()
+    {
+        return $this->belongsTo(Client::class);
+    }
+
+    public function program()
+    {
+        return $this->belongsTo(Program::class);
+    }
 }
+
