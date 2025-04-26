@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('phone')->unique();
             $table->text('address')->nullable();
             $table->date('date_of_birth');
+            $table->softDeletes(); // Enables soft deletes
             $table->timestamps();
         });
     }

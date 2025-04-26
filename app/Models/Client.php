@@ -3,9 +3,27 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+//log when a client is created
+use Illuminate\Support\Facades\Log;
 
 class Client extends Model
 {
+    //enable recovery of deleted records
+    use SoftDeletes;
+
+
+    //prevent mass assignments
+    protected $fillable = [
+        'first_name',
+        'last_name',
+        'gender',
+        'email',
+        'phone',
+        'address',
+        'date_of_birth',
+    ];
+
     // A client can be enrolled in many programs (through enrollments)
     public function programs()
     {
@@ -35,5 +53,22 @@ class Client extends Model
     {
         return $this->hasMany(ProgramLog::class);
     }
+
+    // Scope for filtering by gender
+    public function scopeGender($query, $gender)
+    {
+        return $query->where('gender', $gender);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($client) {
+            Log::info("Client created: {$client->first_name} {$client->last_name}");
+        });
+    }
+
 }
+
 
