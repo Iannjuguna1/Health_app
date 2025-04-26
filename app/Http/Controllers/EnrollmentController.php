@@ -21,27 +21,8 @@ class EnrollmentController extends Controller
         try {
             $client = Client::findOrFail($request->client_id);
 
-            // Check for already enrolled programs
-            $alreadyEnrolled = $client->programs()->whereIn('id', $request->program_ids)->pluck('id')->toArray();
-            if (!empty($alreadyEnrolled)) {
-                return response()->json([
-                    'error' => 'Client is already enrolled in some programs',
-                    'already_enrolled_programs' => $alreadyEnrolled,
-                ], 400);
-            }
-
             // Attach multiple programs
             $client->programs()->syncWithoutDetaching($request->program_ids);
-
-            // Log the enrollment
-            foreach ($request->program_ids as $programId) {
-                ProgramLog::create([
-                    'client_id' => $client->id,
-                    'program_id' => $programId,
-                    'action' => 'enrolled',
-                    'log_entry' => "Client {$client->id} enrolled in program {$programId}",
-                ]);
-            }
 
             // Return the updated list of programs
             $enrolledPrograms = $client->programs;
@@ -49,7 +30,7 @@ class EnrollmentController extends Controller
             return response()->json([
                 'message' => 'Client enrolled in programs successfully',
                 'enrolled_programs' => $enrolledPrograms,
-            ]);
+            ], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to enroll client in programs', 'details' => $e->getMessage()], 500);
         }
