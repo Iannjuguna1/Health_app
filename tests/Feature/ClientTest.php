@@ -20,8 +20,11 @@ class ClientTest extends TestCase
         $clientData = [
             'first_name' => 'Ian',
             'last_name' => 'Njuguna',
+            'gender' => 'male', // Added gender
             'email' => 'ian@example.com',
             'phone' => '0712345678',
+            'address' => '123 Main Street, Nairobi', // Added address
+            'date_of_birth' => '1990-01-01', // Added date of birth
         ];
 
         // Act: Send a POST request to register the client
@@ -35,8 +38,11 @@ class ClientTest extends TestCase
                 'id',
                 'first_name',
                 'last_name',
+                'gender',
                 'email',
                 'phone',
+                'address',
+                'date_of_birth',
                 'created_at',
                 'updated_at',
             ],
@@ -44,13 +50,14 @@ class ClientTest extends TestCase
 
         $this->assertDatabaseHas('clients', [
             'email' => 'ian@example.com',
+            'phone' => '0712345678',
         ]);
     }
 
     /**
      * Test that client registration requires all fields.
      */
-
+    /** @test */
     public function client_registration_requires_all_fields()
     {
         // Act: Send a POST request with empty data
@@ -58,21 +65,31 @@ class ClientTest extends TestCase
 
         // Assert: Check that the response returns validation errors for required fields
         $response->assertStatus(422);
-        $response->assertJsonValidationErrors(['first_name', 'last_name', 'email', 'phone']);
+        $response->assertJsonValidationErrors([
+            'first_name',
+            'last_name',
+            'gender',
+            'email',
+            'phone',
+            'date_of_birth',
+        ]);
     }
 
     /**
      * Test that client registration requires a valid email.
      */
-
+    /** @test */
     public function client_registration_requires_a_valid_email()
     {
         // Arrange: Prepare client data with an invalid email
         $clientData = [
             'first_name' => 'Ian',
             'last_name' => 'Njuguna',
+            'gender' => 'male',
             'email' => 'invalid-email', // Invalid email
             'phone' => '0712345678',
+            'address' => '123 Main Street, Nairobi',
+            'date_of_birth' => '1990-01-01',
         ];
 
         // Act: Send a POST request to register the client
@@ -85,7 +102,8 @@ class ClientTest extends TestCase
 
     /**
      * Test that client registration requires a unique email.
-        */
+     */
+    /** @test */
     public function client_registration_requires_unique_email()
     {
         // Arrange: Create an existing client with the same email
@@ -95,8 +113,11 @@ class ClientTest extends TestCase
         $clientData = [
             'first_name' => 'Ian',
             'last_name' => 'Njuguna',
+            'gender' => 'male',
             'email' => 'ian@example.com', // Duplicate email
             'phone' => '0712345678',
+            'address' => '123 Main Street, Nairobi',
+            'date_of_birth' => '1990-01-01',
         ];
 
         // Act: Send a POST request to register the client
@@ -145,8 +166,11 @@ class ClientTest extends TestCase
                 'id',
                 'first_name',
                 'last_name',
+                'gender',
                 'email',
                 'phone',
+                'address',
+                'date_of_birth',
                 'created_at',
                 'updated_at',
             ],

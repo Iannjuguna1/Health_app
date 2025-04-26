@@ -6,9 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 //log when a client is created
 use Illuminate\Support\Facades\Log;
+//factories for tests
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Client extends Model
 {
+    use HasFactory;
     //enable recovery of deleted records
     use SoftDeletes;
 
