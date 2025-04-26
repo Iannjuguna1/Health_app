@@ -30,9 +30,8 @@ class EnrollmentTest extends TestCase
         // Act: Send a POST request to enroll the client in programs
         $response = $this->postJson('/api/enrollments', $enrollmentData);
 
-         dd($response->json()); // Debug the response
-
-         $response->assertStatus(200);
+        // Assert: Check that the response is successful and the client is enrolled in the programs
+        $response->assertStatus(200); // Ensure the response status is 200
         $response->assertJsonStructure([
             'message',
             'enrolled_programs' => [
@@ -47,6 +46,7 @@ class EnrollmentTest extends TestCase
             ],
         ]);
 
+        // Assert: Verify that the enrollments exist in the database
         foreach ($programs as $program) {
             $this->assertDatabaseHas('enrollments', [
                 'client_id' => $client->id,
