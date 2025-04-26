@@ -11,17 +11,12 @@ return new class extends Migration
      *
      * @return void
      */
-
     public function up()
-{
-    Schema::create('programs', function (Blueprint $table) {
-        $table->id();
-        $table->string('name');
-        $table->text('description')->nullable();
-        $table->string('status')->default('active');
-        $table->timestamps();
-    });
-}
+    {
+        Schema::table('programs', function (Blueprint $table) {
+            //
+        });
+    }
 
     /**
      * Reverse the migrations.
@@ -30,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('programs');
+        Schema::table('programs', function (Blueprint $table) {
+            //
+        });
     }
 };

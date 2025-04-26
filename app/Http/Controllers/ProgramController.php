@@ -1,5 +1,5 @@
 <?php
-
+// filepath: c:\xampp\htdocs\Health_app\app\Http\Controllers\ProgramController.php
 namespace App\Http\Controllers;
 
 use App\Models\Program;
@@ -12,15 +12,19 @@ class ProgramController extends Controller
     {
         $request->validate([
             'name' => 'required|unique:programs,name',
+            'description' => 'nullable|string',
+            'status' => 'nullable|in:active,suspended', // Validate status
         ]);
 
         try {
-            $program = new Program();
-            $program->name = $request->name;
-            $program->description = $request->description ?? '';
-            $program->save();
+            // Default status to 'active' if not provided
+            $programData = $request->only(['name', 'description', 'status']);
+            $programData['status'] = $programData['status'] ?? 'active';
 
-            return response()->json(['message' => 'Program created successfully', 'program' => $program]);
+            $program = Program::create($programData);
+
+            // Ensure the response includes the status field
+            return response()->json(['message' => 'Program created successfully', 'program' => $program], 201);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to create program', 'details' => $e->getMessage()], 500);
         }
@@ -31,16 +35,15 @@ class ProgramController extends Controller
     {
         $request->validate([
             'name' => 'required|unique:programs,name,' . $id,
-            'description' => 'nullable',
+            'description' => 'nullable|string',
+            'status' => 'nullable|in:active,suspended', // Validate status
         ]);
 
         try {
             $program = Program::findOrFail($id);
-            $program->name = $request->name;
-            $program->description = $request->description ?? '';
-            $program->save();
+            $program->update($request->only(['name', 'description', 'status']));
 
-            return response()->json(['message' => 'Program updated successfully', 'program' => $program]);
+            return response()->json(['message' => 'Program updated successfully', 'program' => $program], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to update program', 'details' => $e->getMessage()], 500);
         }
@@ -54,9 +57,22 @@ class ProgramController extends Controller
             $program->status = 'suspended';
             $program->save();
 
-            return response()->json(['message' => 'Program suspended successfully', 'program' => $program]);
+            return response()->json(['message' => 'Program suspended successfully', 'program' => $program], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to suspend program', 'details' => $e->getMessage()], 500);
+        }
+    }
+
+    //list all programs
+    public function index()
+    {
+        try {
+            $programs = Program::all();
+
+            // Ensure the response structure matches the test expectations
+            return response()->json($programs, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to retrieve programs', 'details' => $e->getMessage()], 500);
         }
     }
 }

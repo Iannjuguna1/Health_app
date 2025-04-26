@@ -7,6 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Program extends Model
 {
+
+    //factories for tests
+    use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'description',
+        'status',
+    ];
+
     // A program has many clients
     public function clients()
     {
