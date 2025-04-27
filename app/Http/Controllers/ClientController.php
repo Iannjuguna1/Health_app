@@ -7,6 +7,13 @@ use Illuminate\Http\Request;
 
 class ClientController extends Controller
 {
+    //display form
+
+    public function create()
+{
+    return view('clients.create'); // Render the Blade form
+}
+
     // Register a new client
     public function store(Request $request)
     {
@@ -91,5 +98,12 @@ class ClientController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to retrieve client profile', 'details' => $e->getMessage()], 500);
         }
+    }
+
+    // List all clients
+    public function index()
+    {
+        $clients = Client::all(); // Fetch all clients
+        return view('clients.index', compact('clients')); // Pass data to the view
     }
 }

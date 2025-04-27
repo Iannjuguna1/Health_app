@@ -63,7 +63,7 @@ class ProgramController extends Controller
         }
     }
 
-    //list all programs
+    //list all programs:API
     public function index()
     {
         try {
@@ -75,4 +75,16 @@ class ProgramController extends Controller
             return response()->json(['error' => 'Failed to retrieve programs', 'details' => $e->getMessage()], 500);
         }
     }
+
+    // Web: Render Blade view
+public function indexView()
+{
+    try {
+        $programs = Program::all();
+
+        return view('programs.index', compact('programs')); // Pass data to the view
+    } catch (\Exception $e) {
+        return back()->withErrors(['error' => 'Failed to retrieve programs']);
+    }
+}
 }
